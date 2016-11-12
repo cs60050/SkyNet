@@ -9,7 +9,7 @@ def readfile(filename):
 	return float_image
 
 
-def input_pipeline(filenames, batch_size):
+def input_pipeline(filenames, batch_size, num_epochs=None):
 	filename_queue = tf.train.string_input_producer(filenames, num_epochs = num_epochs)
 	file = readfile(filename_queue)
 	capacity = 200
