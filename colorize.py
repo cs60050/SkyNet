@@ -91,6 +91,7 @@ saver = tf.train.Saver([weights['wc1'], weights['wc2'], weights['wc3'], weights[
 coord = tf.train.Coordinator()
 threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
+step = 0
 try:
 	while not coord.should_stop():
 		print step
@@ -99,7 +100,7 @@ try:
 
 		if step % 5 == 0:
 			compare_output, cost, pt = sess.run([output, loss, conv1_2], feed_dict={phase_train:False})
-			print 'cost: '+ cost
+			print cost
 			saver.save(sess, 'my-model', global_step=step)
 
 			for j in range(batch_size):
