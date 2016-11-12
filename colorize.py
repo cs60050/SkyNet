@@ -10,11 +10,11 @@ import architecture as arch
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-filenames = sorted(glob.glob("/home/saurabh/Test1/*.jpg"))
+filenames = sorted(glob.glob("../Images/*.jpg"))
 batch_size = 6
 num_epochs = 10
 
-global_step = tf.Variable(0, name='global_step', trainable=False)
+#global_step = tf.Variable(0, name='global_step', trainable=False)
 phase_train = tf.placeholder(tf.bool, name='phase_train')
 
 rgb_image = fi.input_pipeline(filenames, batch_size, num_epochs=num_epochs)
@@ -26,7 +26,7 @@ y_image = tf.split(3, 3, yuv_image)[0]
 grayscale = tf.concat(3, [y_image, y_image, y_image])
 
 
-with open("vgg16.tfmodel", mode = 'rb') as f:
+with open("../vgg16.tfmodel", mode = 'rb') as f:
 	fileContent = f.read()
 
 graph_def = tf.GraphDef()
@@ -93,21 +93,17 @@ threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
 try:
 	while not coord.should_stop():
-		
+		print step
+		step = step + 1
 		training_opt = sess.run(opt, feed_dict={phase_train:True})
 
-		step = sess.run(global_step)
-
-		if step % 1 == 0:
+		if step % 5 == 0:
 			compare_output, cost, pt = sess.run([output, loss, conv1_2], feed_dict={phase_train:False})
-			print {
-				"step": step,
-				"cost": cost
-			}
+			print 'cost': cost
+			saver.save(sess, 'my-model', global_step=step)
 
-			if step % 5 == 0:
-				for j in range(batch_size):
-					plt.imsave("summary/" +str(step)+"_"+ str(j), compare_output[j])
+			for j in range(batch_size):
+				plt.imsave("../Outputs/image_" +str(step)+"_"+ str(j), compare_output[j])
 
 			sys.stdout.flush()
 
