@@ -10,7 +10,7 @@ def rgb_to_yuv(image):
 	return tf.nn.bias_add(out, filter_biases)
 
 
-def yuv_to_rgb(image):
+def yuv_to_rgb(image, batch_size):
 	filter_weights = tf.constant(
 					[[[[1.000, 1.000, 1.000],
 					[0.000, -0.344, 1.772],

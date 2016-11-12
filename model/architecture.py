@@ -22,10 +22,10 @@ def conv2d(input, weights, train):
 
 
 
-def cnn_model(tensors):
+def cnn_model(tensors, train):
 	
 	norm_features_4_3 = batch_normalize(tensors["conv4_3"], 512, train)
-	layer1 = tf.nn.conv2d(norm_features, tensors["weights"]["wc1"], [1,1,1,1], padding='SAME')
+	layer1 = tf.nn.conv2d(norm_features_4_3, tensors["weights"]["wc1"], [1,1,1,1], padding='SAME')
 	layer1 = tf.nn.relu(layer1)
 	layer1 = tf.image.resize_bilinear(layer1, [56,56])
 	norm_features_3_3 = batch_normalize(tensors["conv3_3"], 256, train)
@@ -37,7 +37,7 @@ def cnn_model(tensors):
 	input2 = tf.add(layer2, norm_features_2_2)
 
 	layer3 = conv2d(input2, tensors["weights"]["wc3"], train)
-	layer3 = tf.image.resize_bilinear(layer2, [224,224])
+	layer3 = tf.image.resize_bilinear(layer3, [224,224])
 	norm_features_1_2 = batch_normalize(tensors["conv1_2"], 64, train)
 	input3 = tf.add(layer3, norm_features_1_2)
 
