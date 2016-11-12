@@ -8,11 +8,13 @@ import convert_images
 from batchnorm import BatchNormalizer
 import architecture
 import tensorflow as tf
+from matplotlib import pyplot as plt
 
-filenames = sorted(glob.glob("PATH"))
+filenames = sorted(glob.glob("images/*"))
 batch_size = 6
 num_epochs = 1e+9
 
+global_step = tf.Variable(0, name='global_step', trainable=False)
 phase_train = tf.placeholder(tf.bool, name='phase_train')
 
 rgb_image = input_pipeline(filenames, batch_size, num_epochs=num_epochs)
@@ -88,3 +90,31 @@ saver = tf.train.Saver([weights['wc1'], weights['wc2'], weights['wc3'], weights[
 
 coord = tf.train.Coordinator()
 threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+
+try:
+	while not coord.should_stop():
+		
+		training_opt = sess.run(opt, feed_dict={phase_train:True})
+
+		step = sess.run(global_step)
+
+		if step % 1 == 0:
+			compare_output, cost, pt = sess.run([output, loss, conv1_2], feed_dict={phase_train:False})
+			print {
+				"step": step,
+				"cost": cost
+			}
+
+			if step % 1000 == 0:
+				plt.imsave("summary/" + str(step) + "_0", compare_output)
+
+			sys.stdout.flush()
+
+except Exception as e:
+	coord.request_stop(e)
+finally:
+	coord.request_stop()
+
+
+coord.join(threads)
+sess.close()
