@@ -1,6 +1,7 @@
 # SkyNet
 
 Team Name: SkyNet
+
 Area: Computer Generated Art
 
 Project Title: "Image Re-Colorization and Extrpolation and cascading of both in different orders to compare the results"
