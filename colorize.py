@@ -1,46 +1,90 @@
 import sys
+import os
+sys.path.append(os.path.join(sys.path[0],'model'))
+sys.path.append(os.path.join(sys.path[0],'utils'))
+import glob
+import feed_input
+import convert_images
+from batchnorm import BatchNormalizer
+import architecture
 import tensorflow as tf
 
+filenames = sorted(glob.glob("PATH"))
 batch_size = 6
 num_epochs = 1e+9
 
-def readfile(filename):
-	reader = tf.WholeFileReader()
-	key,value = reader.read(filename)
-	image = tf.image.decode_jpeg(value, channels=3)
-	image = tf.image.resize_images(image, 224, 224)
-	float_image = tf.div(tf.cast(image,tf.float), 255)
-	return float_image
+phase_train = tf.placeholder(tf.bool, name='phase_train')
 
-def input_pipeline(filenames, batch_size)
-	filename_queue = tf.train.string_input_producer(filenames, num_epochs = num_epochs)
-	file = readfile(filename_queue)
-	capacity = 200
-	min_after_dequeue = 100
-	return tf.train.shuffle_batch([file], batch_size=batch_size,
-		capacity=capacity, min_after_dequeue=min_after_dequeue)
+rgb_image = input_pipeline(filenames, batch_size, num_epochs=num_epochs)
+yuv_image = rgb_to_yuv(rgb_image)
 
-def rgb_to_yuv(image):
-	filter_weights = tf.constant(
-    				[[[[0.299, -0.169, 0.499],
-    				[0.587, -0.331, -0.418],
-    				[0.114, 0.499, -0.0813]]]])
-	filter_biases = tf.constant([0.0, 0.5, 0.5])
-	out = tf.nn.conv2d(image, filter_weights, [1, 1, 1, 1], 'SAME')
-	return tf.nn.bias_add(out, filter_biases)
+uv_image = tf.concat(3, [tf.split(3, 3, yuv_image)[1], tf.split(3, 3, yuv_image)[2]])
+y_image = tf.split(3, 3, yuv_image)[0]
 
-def yuv_to_rgb(image):
-	filter_weights = tf.constant(
-					[[[[1.000, 1.000, 1.000],
-					[0.000, -0.344, 1.772],
-					[1.402, -0.714, 0.000]]]])
-	filter_biases = tf.constant([-179.456, 135.459, -226.816])
-	scaled_image = tf.mul(image, 255)
-	out = tf.nn.conv2d(scaled_image, filter_weights, [1, 1, 1, 1], 'SAME')
-	out = tf.nn.bias_add(out, filter_biases)
-
-	temp = tf.maximum(tf.constant(0.0,shape=[batch_size,224,224,3]), out)
-	temp = tf.minimum(tf.constant(255.0,shape=[batch_size,224,224,3]), out)
-	return tf.div(temp, 255)
+grayscale = tf.concat(3, [y_image, y_image, y_image])
 
 
+with open("vgg16.tfmodel", mode = 'rb') as f:
+	fileContent = f.read()
+
+graph_def = tf.GraphDef()
+graph_def.ParseFromString(fileContent)
+tf.import_graph_def(graph_def, input_map={"images": grayscale})
+graph = tf.get_default_graph()
+
+
+with tf.variable_scope('vgg'):
+	conv1_2 = batch_normalize(graph.get_tensor_by_name("import/conv1_2/Relu:0"), 64, phase_train)
+	conv2_2 = graph.get_tensor_by_name("import/conv2_2/Relu:0")
+	conv3_3 = graph.get_tensor_by_name("import/conv3_3/Relu:0")
+	conv4_3 = graph.get_tensor_by_name("import/conv4_3/Relu:0")
+
+
+with tf.variable_scope('uvcolor'):
+	weights =
+	{
+		'wc1' = tf.Variable(tf.truncated_normal([1, 1, 512, 256], mean=0.0, stddev=0.01)),
+		'wc2' = tf.Variable(tf.truncated_normal([3, 3, 256, 128], mean=0.0, stddev=0.01)),
+		'wc3' = tf.Variable(tf.truncated_normal([3, 3, 128, 64], mean=0.0, stddev=0.01)),
+		'wc4' = tf.Variable(tf.truncated_normal([3, 3, 64, 3], mean=0.0, stddev=0.01)),
+		'wc5' = tf.Variable(tf.truncated_normal([3, 3, 3, 3], mean=0.0, stddev=0.01)),
+		'wc6' = tf.Variable(tf.truncated_normal([3, 3, 3, 2], mean=0.0, stddev=0.01))
+	}
+
+
+_tensors = {
+	"conv1_2":		conv1_2,
+	"conv2_2":		conv2_2,
+	"conv3_3":		conv3_3,
+	"conv4_3":		conv4_3,
+	"grayscale":	grayscale,
+	"weights":		weights
+}
+
+
+uv_output = cnn_model(_tensors)
+yuv_output = tf.concat(3, [tf.split(3, 3, grayscale)[0], uv_output])
+rgb_output = yuv_to_rgb(yuv_output)
+output = tf.concat(2, [grayscale, rgb_output, rgb_image])
+
+
+loss = tf.reduce_mean(tf.reduce_sum(tf.reduce_sum(tf.reduce_sum(tf.square(tf.sub(rgb_output, rgb_image)),
+									reduction_indices=3), reduction_indices=2), reduction_indices=1))
+
+
+alpha = 1e-3
+optimizer = tf.train.AdamOptimizer(alpha)
+opt = optimizer.minimize(loss)
+
+
+init_op = tf.group(tf.initialize_all_variables(), tf.initialize_local_variables())
+
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.4)
+sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
+sess.run(init_op)
+saver = tf.train.Saver([weights['wc1'], weights['wc2'], weights['wc3'], weights['wc4'],
+						weights['wc5'], weights['wc6']])
+
+
+coord = tf.train.Coordinator()
+threads = tf.train.start_queue_runners(sess=sess, coord=coord)
