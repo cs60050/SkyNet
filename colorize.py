@@ -99,7 +99,7 @@ try:
 
 		if step % 5 == 0:
 			compare_output, cost, pt = sess.run([output, loss, conv1_2], feed_dict={phase_train:False})
-			print 'cost': cost
+			print 'cost: '+ cost
 			saver.save(sess, 'my-model', global_step=step)
 
 			for j in range(batch_size):
