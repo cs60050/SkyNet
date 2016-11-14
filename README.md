@@ -27,4 +27,7 @@ Gabriel Werner
 
 1. http://vision.cs.illinois.edu/projects/lscolor/lscolorization_data.tar.gz
 
+**Idea implemented inspired by:** [http://tinyclouds.org/colorize/](http://tinyclouds.org/colorize/)
+
 # Contents Of This Repository
+The folder **models** contains the modified VGG-16 architecture that we have used for image recolorization. Contents: architeture.py
