@@ -44,10 +44,10 @@ The folder **models** contains the modified VGG-16 architecture that we have use
 
 The folder **utils** comprises of 3 scripts:
 
--*feed_input.py* - to read the images and feed them to the neural network for training/testing
+- *feed_input.py* - to read the images and feed them to the neural network for training/testing
 
--*convert_images.py* - to convert images from RGB to YUV (for training and grayscale conversion) and vice=versa (for computing RGB colorized output)
+- *convert_images.py* - to convert images from RGB to YUV (for training and grayscale conversion) and vice=versa (for computing RGB colorized output)
 
--*batchnorm.py* - to apply batch normalisation on the different layers of the VGG-16 neural network
+- *batchnorm.py* - to apply batch normalisation on the different layers of the VGG-16 neural network
 
 Apart from this, there is a main script *colorize.py* that calls all the functions and performs training/testing.
