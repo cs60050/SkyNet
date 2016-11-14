@@ -10,8 +10,21 @@ Project Title: "Image Re-Colorization and Extrpolation and cascading of both in 
 
 Project Discription: We Are a bunch of Machine Leaning and Computer Vision enthusiasts and plan on comparing results of various approaches to image recolorization through various conventional and non-conventional methodologies
 
+# Group Members
+Vineet Jain
+Saurabh Dash
+Aditya Sinha
+Harsh Bajaj
+Preetham KS
+Oindrila Saha
+Tejas Nitin Lad
+Ramit Pahwa
+Anukul Jha
+Sahil Chadha
+Gabriel Werner
 
 # DataSet For Training Purposes
 
 1. http://vision.cs.illinois.edu/projects/lscolor/lscolorization_data.tar.gz
 
+# Contents Of This Repository
