@@ -12,9 +12,7 @@ Project Discription: We Are a bunch of Machine Leaning and Computer Vision enthu
 
 # Group Members
 [Vineet Jain](https://github.com/VineetJain96)
-
 [Saurabh Dash](https://github.com/saurabhdash)
-
 [Aditya Sinha](https://github.com/adityasinha379)
 [Harsh Bajaj](https://github.com/harsh96)
 [Preetham KS](https://github.com/preethamks2016)
@@ -33,7 +31,11 @@ Gabriel Werner
 
 # Contents Of This Repository
 The folder **models** contains the modified VGG-16 architecture that we have used for image recolorization. Contents: architeture.py
+
 The folder **utils** comprises of 3 scripts:
+
 -feed_input.py - to read the images and feed them to the neural network for training/testing
+
 -convert_images.py - to convert images from RGB to YUV (for training and grayscale conversion) and vice=versa (for computing RGB colorized output)
+
 -batchnorm.py - to apply batch normalisation on the different layers of the VGG-16 neural network
