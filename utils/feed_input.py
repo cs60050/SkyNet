@@ -1,12 +1,17 @@
 import tensorflow as tf
 
 def readfile(filename):
-	reader = tf.WholeFileReader()
-	key,value = reader.read(filename)
-	image = tf.image.decode_jpeg(value, channels=3)
-	image = tf.image.resize_images(image, 224, 224)
-	float_image = tf.div(tf.cast(image,tf.float32), 255)
-	return float_image
+	try:
+		reader = tf.WholeFileReader()
+		key,value = reader.read(filename)
+		image = tf.image.decode_jpeg(value, channels=3)
+		image = tf.image.resize_images(image, 224, 224)
+		float_image = tf.div(tf.cast(image,tf.float32), 255)
+		return float_image
+	except:
+		print -1
+		return readfile(filename)
+		
 
 
 def input_pipeline(filenames, batch_size, num_epochs=None):

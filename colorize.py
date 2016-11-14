@@ -10,9 +10,9 @@ import architecture as arch
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-filenames = sorted(glob.glob("../Images/*.jpg"))
-batch_size = 6
-num_epochs = 10
+filenames = sorted(glob.glob("../Images/*/*.jpg"))
+batch_size = 10
+num_epochs = 1e+9
 
 #global_step = tf.Variable(0, name='global_step', trainable=False)
 phase_train = tf.placeholder(tf.bool, name='phase_train')
@@ -74,7 +74,7 @@ loss = tf.reduce_mean(tf.reduce_sum(tf.reduce_sum(tf.reduce_sum(tf.square(tf.sub
 									reduction_indices=3), reduction_indices=2), reduction_indices=1))
 
 
-alpha = 1e-3
+alpha = 1e-4
 optimizer = tf.train.AdamOptimizer(alpha)
 opt = optimizer.minimize(loss)
 
@@ -98,10 +98,12 @@ try:
 		step = step + 1
 		training_opt = sess.run(opt, feed_dict={phase_train:True})
 
-		if step % 5 == 0:
+		if step % 1000 == 0:
 			compare_output, cost, pt = sess.run([output, loss, conv1_2], feed_dict={phase_train:False})
 			print cost
-			saver.save(sess, 'my-model', global_step=step)
+
+			if step % 10000 == 0:
+				saver.save(sess, 'my-model', global_step=step)
 
 			for j in range(batch_size):
 				plt.imsave("../Outputs/image_" +str(step)+"_"+ str(j), compare_output[j])
