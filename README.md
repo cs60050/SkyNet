@@ -51,3 +51,11 @@ The folder **utils** comprises of 3 scripts:
 - *batchnorm.py* - to apply batch normalisation on the different layers of the VGG-16 neural network
 
 Apart from this, there is a main script *colorize.py* that calls all the functions and performs training/testing.
+
+The folder **examples** has a few test cases on which we ran the code. The first image is the grayscale, the second is the recolorised one and the third is the original image.
+
+## Explanation of Architecture
+The VGG-16 convolutional network is a standard architecture used for object detection in images using CNN. However, in our PS, we need to not only detect objects in the grayscale image, but also to associate U and V values with it for colorization. For this, we remove the final class labels of the VGG-16 output (truncated VGG-16). Instead, we have used additional architecture, wherein we have first passed the grayscale image through VGG-16. Then, using the highest layer, we have performed batch normalisation to infer some color, which is upscaled and merged with the batch normalised color information from the next highest layer. Proceeding like this, we have worked our way to the bottom of VGG-16 architecture and obtained the UV output. From there, it's only a matter of linear transform to convert orthonormal basis YUV to RGB color output.
+
+### Possibility of improvement
+It seems as though for some images, the amount of information retrieved is insufficient to predict coherency. So, we would get better results with the VGG-19 network and would be able to color more of the image.
