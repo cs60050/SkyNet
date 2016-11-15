@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>SkyNet Colorise</title>
+
+		<link rel="stylesheet" href="css/materialize.min.css">
+
+		<script src="js/jquery-2.2.4.min.js"></script>
+		<script src="js/materialize.min.js"></script>
+
+		<style>
+
+			@font-face {
+			    font-family: heading;
+			    src: url(css/fonts/title.ttf);
+			}
+			@font-face {
+			    font-family: bodyText;
+			    src: url(css/fonts/body.ttf);
+			}
+			body
+			{
+
+			}
+			#wrapper
+			{
+				width:100%;
+				background-color: #616161;
+				min-height: 90vh;
+				margin-top: 1px;
+				text-align: center;
+				transition-duration:100ms;
+			}
+			#top
+			{
+				width:100%;
+				height: 10vh;
+				background-color: black;
+				min-height: 100px;
+			}
+			#logo
+			{
+				height: 10vh;
+				min-height: 100px;
+			}
+			h1
+			{
+				font-family: heading;
+				color: white;
+				text-align: center;
+				margin-top: 0px;
+			}
+			p
+			{
+				font-family: bodyText;
+				color: white;
+				text-align: center;
+			}
+			#initial{
+				max-width: 50vw;
+				margin: auto;
+			}
+
+			#imageChanger 
+			{
+				position: absolute;
+			    width:224px;
+				height:224px;
+				margin-top: 50px;
+				overflow: hidden;
+				cursor: pointer;
+			}
+			 #left_panel {
+			    position: absolute;
+			    left: 0;
+			    top: 0;
+			    bottom: 0;
+			    right: 50px;
+			    background: #616161;
+			    overflow: hidden;
+			}
+
+			#right_panel {
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			    width: 50px;
+			    color:#fff;
+			    background: #616161;
+			    overflow: hidden;
+			}
+			 #drag {
+			    position: absolute;
+			    left: 0px;
+			    top: 0;
+			    bottom: 0;
+			    width: 4px;
+			    cursor: pointer;
+			    background-color: blue;
+			    transition-duration:0ms;
+			}
+			#black
+			{
+				position:absolute;
+				width:224px;
+				height:224px;
+				right:-50px
+			}
+			#color
+			{
+				position:absolute;
+				width:224px;
+				height:224px;
+				left:-174px;
+			}
+			#img-ins{
+				font-size: 12px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="top" class="z-depth-3">
+			<center>
+				<img id="logo" src="img/logo.png">
+			</center>
+		</div>
+		<div id="wrapper" class="container-fluid">
+			<h1>Cool Title</h1>
+			<p id="initial">Small para about the project like what we have done maybe or about the algorithm or what they are about to see or any kind of bakar just to fill this space.</p>
+			<div class="row" style="height:270px;">
+				<div id="imageChanger" class="col s3 offset-s5">
+				    <div id="left_panel"> 
+				    	<img src="img/black.jpg" id="black"></img>
+				    </div>
+				    <div id="right_panel">
+				    	<img src="img/color.jpg" id="color"></img>
+				        <div id="drag">
+				        </div>
+				    </div>
+				</div>
+			</div>
+			<div id="row">
+				<p id="img-ins">(click on the blue line and then move the mouse)</p>
+			</div>
+			<div id="row">
+			</div>
+		</div>
+	</body>
+
+	<script>
+		var isResizing = false,
+		    lastDownX = 0;
+		    flag=1;
+
+		$(function () {
+		    var container = $('#imageChanger'),
+		        left = $('#left_panel'),
+		        right = $('#right_panel'),
+		        handle = $('#drag');
+		        color =$('#color');
+		        black=$('#black');
+		    $('body').on('mousedown',function(e){
+		    	if(e.target.id=="drag")
+		    	{
+		    		return;
+		    	}
+		    	else
+		    	{
+			    	isResizing = false;
+		        	flag=1;
+		        	$('#wrapper').css("background-color","#616161");
+		    	}
+		    });    
+		    handle.on('mousedown', function (e) {
+		        isResizing = true;
+		        lastDownX = e.clientX;
+		        if(flag==0)
+		        {
+		        	isResizing = false;
+		        	flag=1;
+		        	$('#wrapper').css("background-color","#616161");
+		        }
+		        else
+		        {
+		        	// stop resizing
+		        	flag=0;
+		        }
+		    });
+
+		    $(document).on('mousemove', function (e) {
+		        // we don't want to do anything if we aren't resizing.
+		        if (!isResizing) 
+		            return;
+
+		        var offsetRight = container.width() - (e.clientX - container.offset().left);
+		        if(offsetRight>4 && offsetRight<223)
+		        {
+			        left.css('right', offsetRight);
+			        color.css('left',-224+offsetRight);
+			        right.css('width', offsetRight);
+			        black.css('right',0-offsetRight);
+
+			        var gradient= (offsetRight/224)*0.6+0.4;
+
+			        console.log(gradient);
+			      	 var bg = "rgba(0,0,0,"+gradient+")";
+			        $('#wrapper').css("background-color",bg);
+		        }
+		    }).on('mouseup', function (e) {
+		        // stop resizing
+		       // isResizing = false;
+		    });
+		});
+	</script>
+</html>

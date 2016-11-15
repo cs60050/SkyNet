@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<script src="js/jquery-2.2.4.min.js"></script>
+		<style>
+			body, html {
+			    width: 100%;
+			    height: 100%;
+			    margin: 0;
+			    padding: 0;
+			}
+			#imageChanger 
+			{
+				position: absolute;
+			    width:224px;
+				height:224px;
+				margin-top: 200px;
+				margin-left: 200px;
+			}
+			 #left_panel {
+			    position: absolute;
+			    left: 0;
+			    top: 0;
+			    bottom: 0;
+			    right: 50px;
+			    background: #616161;
+			    overflow: hidden;
+			}
+
+			#right_panel {
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			    width: 50px;
+			    color:#fff;
+			    background: #616161;
+			    overflow: hidden;
+			}
+			 #drag {
+			    position: absolute;
+			    left: -4px;
+			    top: 0;
+			    bottom: 0;
+			    width: 10px;
+			    cursor: pointer;
+			    background-color: blue;
+			}
+			#black
+			{
+				position:absolute;
+				width:224px;
+				right:-50px
+			}
+			#color
+			{
+				position:absolute;
+				width:224px;
+				left:-174px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="imageChanger">
+		    <div id="left_panel"> 
+		    	<img src="black.jpg" id="black"></img>
+		    </div>
+		    <div id="right_panel">
+		    	<img src="color.jpg" id="color"></img>
+		        <div id="drag">
+		        </div>
+		    </div>
+		</div>
+
+		<script>
+			var isResizing = false,
+			    lastDownX = 0;
+			    flag=1;
+
+			$(function () {
+			    var container = $('#imageChanger'),
+			        left = $('#left_panel'),
+			        right = $('#right_panel'),
+			        handle = $('#drag');
+			        color =$('#color');
+			        black=$('#black');
+
+			    handle.on('mousedown', function (e) {
+			        isResizing = true;
+			        lastDownX = e.clientX;
+			        if(flag==0)
+			        {
+			        	isResizing = false;
+			        	flag=1;
+			        }
+			        else
+			        {
+			        	// stop resizing
+			        	flag=0;
+			        }
+			    });
+
+			    $(document).on('mousemove', function (e) {
+			        // we don't want to do anything if we aren't resizing.
+			        if (!isResizing) 
+			            return;
+
+			        var offsetRight = container.width() - (e.clientX - container.offset().left);
+			        if(offsetRight>1 && offsetRight<223)
+			        {
+				        left.css('right', offsetRight);
+				        color.css('left',-224+offsetRight);
+				        right.css('width', offsetRight);
+				        black.css('right',0-offsetRight);
+			        }
+			    }).on('mouseup', function (e) {
+			        // stop resizing
+			       // isResizing = false;
+			    });
+			});
+		</script>
+	</body>
+</html>
