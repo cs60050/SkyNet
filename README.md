@@ -54,7 +54,9 @@ The folder **utils** comprises of 3 scripts:
 
 Apart from this, there is a main script *colorize.py* that calls all the functions and performs training/testing.
 
-The folder **examples** has a few test cases on which we ran the code. The first image is the grayscale, the second is the recolorised one and the third is the original image.
+The folder **examples** has a few test cases on which we ran the code. The first image is the grayscale, the second is the recolorised one and the third is the original image. It also has a 3-minute frame by frame recolorized video of a Charlie Chaplin sequence.
+
+The folder **website** has the code for the [website](https://cs60050.github.io/SkyNet/website/) that we have made for this project.
 
 ## Prerequisites
 - TensorFlow
