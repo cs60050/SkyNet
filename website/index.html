@@ -21,7 +21,8 @@
 			}
 			body
 			{
-
+				margin: 0px;
+				padding:0px;
 			}
 			#wrapper
 			{
@@ -31,18 +32,28 @@
 				margin-top: 1px;
 				text-align: center;
 				transition-duration:100ms;
+				margin-bottom: 0px;
 			}
 			#top
 			{
 				width:100%;
-				height: 10vh;
+				height: 6vh;
 				background-color: black;
-				min-height: 100px;
+				min-height: 60px;
+			}
+			#bottom
+			{
+				width:100%;
+				height: 6vh;
+				background-color: black;
+				min-height: 60px;
+				margin-bottom: 0px;
+				margin-top: 40px;
 			}
 			#logo
 			{
-				height: 10vh;
-				min-height: 100px;
+				height: 6vh;
+				min-height: 60px;
 			}
 			h1
 			{
@@ -68,7 +79,6 @@
 			    width:224px;
 				height:224px;
 				margin-top: 50px;
-				overflow: hidden;
 				cursor: pointer;
 			}
 			 #left_panel {
@@ -115,8 +125,23 @@
 				height:224px;
 				left:-174px;
 			}
+			#original
+			{
+				position:absolute;
+				width:224px;
+				height:224px;
+				margin-left: 200px;
+			}
 			#img-ins{
 				font-size: 12px;
+			}
+			.examples{
+				height:70px;
+				cursor: pointer;
+				transition-duration:500ms;
+			}
+			.examples:hover{
+				border: 2px solid blue;
 			}
 		</style>
 	</head>
@@ -128,11 +153,11 @@
 			</center>
 		</div>
 		<div id="wrapper" class="container-fluid">
-			<h1>Cool Title</h1>
-			<p id="initial">Small para about the project like what we have done maybe or about the algorithm or what they are about to see or any kind of bakar just to fill this space.</p>
+			<h1>Image and Video Recolorization using C.N.N.</h1>
+			<p id="initial">Here below are a set of examples which were generated using our model of various pictures and a video which was colorised.</p>
 			<div class="row" style="height:270px;">
-				<div id="imageChanger" class="col s3 offset-s5">
-				    <div id="left_panel"> 
+				<div id="imageChanger" class="col s4 offset-s3">
+				    <div id="left_panel">
 				    	<img src="img/black.jpg" id="black"></img>
 				    </div>
 				    <div id="right_panel">
@@ -140,20 +165,68 @@
 				        <div id="drag">
 				        </div>
 				    </div>
+				    <div>
+				    	<p style="position: absolute;color: black;z-index: 1;font-size: 10px;">original</p>
+				    	<img src="img/original.jpg" id="original"></img>
+				    </div>
 				</div>
 			</div>
 			<div id="row">
 				<p id="img-ins">(click on the blue line and then move the mouse)</p>
 			</div>
-			<div id="row">
+			<div class="row" style="margin-top:30px;">
+				<p id="img-ins">Try us too !!</p>
+				<div class="col s1 offset-s1">
+					<img src="img/black1.jpg" id="1" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black2.jpg" id="2" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black3.jpg" id="3" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black4.jpg" id="4" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black5.jpg" id="5" class="examples"></img>
+				</div>
+				<div class="col s1 ">
+					<img src="img/black6.jpg" id="6" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black7.jpg" id="7" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black8.jpg" id="8" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black9.jpg" id="9" class="examples"></img>
+				</div>
+				<div class="col s1">
+					<img src="img/black10.jpg" id="10" class="examples"></img>
+				</div>
+			</div>
+			<iframe style="margin-top:40px;"width="560" height="315" src="https://www.youtube.com/embed/IieykkAVmcg" frameborder="0" allowfullscreen></iframe>
+			<div id="bottom" class="z-depth-3">
+				<center>
+					<img id="logo" src="img/logo.png">
+				</center>
 			</div>
 		</div>
+		
 	</body>
 
 	<script>
 		var isResizing = false,
 		    lastDownX = 0;
 		    flag=1;
+		$('.examples').click(function(){
+			var id=$(this).attr('id');
+			$("#black").attr("src","img/black"+id+".jpg");
+			$("#color").attr("src","img/color"+id+".jpg");
+			$("#original").attr("src","img/original"+id+".jpg"); 
+		});    
 
 		$(function () {
 		    var container = $('#imageChanger'),
