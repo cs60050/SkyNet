@@ -13,6 +13,8 @@ Project Discription: We Are a bunch of Machine Leaning and Computer Vision enthu
 Website: https://cs60050.github.io/SkyNet/website/
 
 # Group Members
+[Ramit Pahwa](https://github.com/Ramit-Pahwa) (Team Lead)
+
 [Vineet Jain](https://github.com/VineetJain96)
 
 [Saurabh Dash](https://github.com/saurabhdash)
@@ -26,8 +28,6 @@ Website: https://cs60050.github.io/SkyNet/website/
 [Oindrila Saha](https://github.com/oindrilasaha)
 
 [Tejas Nitin Lad](https://github.com/tejasytl)
-
-[Ramit Pahwa](https://github.com/Ramit-Pahwa)
 
 Anukul Jha
 
